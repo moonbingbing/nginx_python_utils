@@ -30,12 +30,23 @@ def get_cpu_processor_count():
         print "Could not get cpu_processor_count,return the default value. error info: %s" % str(e)
     return cpu_processor_count
 
-def auto_modify_nginx_cpu_conf(path = '/etc/nginx.conf'):
+def auto_modify_nginx_cpu_conf(filepath = '/etc/nginx.conf'):
     ''' auto modify worker_processes and worker_cpu_affinity in nginx.conf according to the number of cpu.
-        path: where's nginx.conf. default is /etc/nginx.conf '''
-    if not os.path.exists(path):
-        print 'nginx.conf not exist : %s' % path
+        filepath: where's nginx.conf. default is /etc/nginx.conf '''
+    if not os.path.exists(filepath):
+        print 'nginx.conf not exist : %s' % filepath
         return False
+    
+    nginx_conf = ''
+    try:
+        f = open(filepath)
+        nginx_conf = f.read()
+    finally:
+        f.close()
+        
+    cpu_processor_count = get_cpu_processor_count()
+    worker_cpu_affinity = get_worker_cpu_affinity(cpu_processor_count)
+    
     
 if __name__ == "__main__":
     print get_cpu_processor_count()#worker_cpu_affinity(24)
