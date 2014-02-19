@@ -5,6 +5,7 @@ __author__  = 'moonbingbing at gmail.com'
 
 import os
 import re
+import sys
 try:
     import multiprocessing #new in python 2.6
 except ImportError:
@@ -30,7 +31,7 @@ def get_cpu_processor_count():
         print "Could not get cpu_processor_count,return the default value. error info: %s" % str(e)
     return cpu_processor_count
 
-def auto_modify_nginx_cpu_conf(filepath = '/etc/nginx.conf'):
+def auto_modify_nginx_cpu_conf(filepath):
     ''' auto modify worker_processes and worker_cpu_affinity in nginx.conf according to the number of cpu.
         filepath: where's nginx.conf. default is /etc/nginx.conf '''
     if not os.path.exists(filepath):
@@ -63,4 +64,8 @@ def auto_modify_nginx_cpu_conf(filepath = '/etc/nginx.conf'):
     return True
 
 if __name__ == "__main__":
-    print auto_modify_nginx_cpu_conf()
+    if len(sys.argv) > 1:
+        filepath = sys.argv[1]
+    else:
+        filepath = '/etc/nginx.conf'
+    print auto_modify_nginx_cpu_conf(filepath)
